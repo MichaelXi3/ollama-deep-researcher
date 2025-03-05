@@ -8,28 +8,31 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# 1) Install uv package manager
-#    By default, uv installs to ~/.local/bin. We update PATH so uv is recognized.
+# Install uv package manager (faster and better dependency resolution)
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:${PATH}"
 
-# 2) Copy the repository content
+# Copy the repository content
 COPY . /app
 
-# 3) Provide default environment variables to point to Ollama (running elsewhere)
-#    Adjust the OLLAMA_URL to match your actual Ollama container or service.
-ENV OLLAMA_BASE_URL="http://localhost:11434/"
+# Use uv to install dependencies with specific versions for CORS fix
+RUN uv pip install --no-cache "langgraph-cli[inmem]>=0.1.73" "langgraph-api>=0.0.26" && \
+    uv pip install --no-cache --editable .
 
-# 4) Expose the port that LangGraph dev server uses (default: 2024)
+# Default environment variables for Ollama
+# In docker-compose, this should be set to http://ollama:11434
+ENV OLLAMA_BASE_URL="http://ollama:11434"
+
+# Expose the port that LangGraph dev server uses
 EXPOSE 2024
 
-# 5) Launch the assistant with the LangGraph dev server:
-#    Equivalent to the quickstart: uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev
+# Launch with fixed host and port to avoid CORS issues
 CMD ["uvx", \
      "--refresh", \
-     "--from", "langgraph-cli[inmem]", \
+     "--from", "langgraph-cli[inmem]>=0.1.73", \
      "--with-editable", ".", \
      "--python", "3.11", \
      "langgraph", \
      "dev", \
-     "--host", "0.0.0.0"]
+     "--host", "localhost", \
+     "--port", "2024"]

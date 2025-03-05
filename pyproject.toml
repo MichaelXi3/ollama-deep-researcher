@@ -1,5 +1,5 @@
 [project]
-name = "ollama-deep-researcher"
+name = "deep-research-newsletter"
 version = "0.0.1"
 description = "Lightweight web research and summarization assistant."
 authors = [
@@ -15,6 +15,7 @@ dependencies = [
     "langchain-ollama>=0.2.1",
     "duckduckgo-search>=7.3.0",
     "beautifulsoup4>=4.13.3",
+    "langchain-openai>=0.3.6",
 ]
 
 [project.optional-dependencies]
@@ -25,10 +26,18 @@ requires = ["setuptools>=73.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["assistant"]
+packages = [
+    "assistant",
+    "assistant.common",
+    "assistant.deep_research",
+    "assistant.newsletter"
+]
 
 [tool.setuptools.package-dir]
 "assistant" = "src/assistant"
+"assistant.common" = "src/assistant/common"
+"assistant.deep_research" = "src/assistant/deep_research"
+"assistant.newsletter" = "src/assistant/newsletter"
 
 [tool.setuptools.package-data]
 "*" = ["py.typed"]
@@ -56,3 +65,23 @@ lint.ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=src --cov-report=term-missing"
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+]

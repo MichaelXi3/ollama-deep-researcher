@@ -1,7 +1,9 @@
 {
     "dockerfile_lines": [],
     "graphs": {
-      "ollama_deep_researcher": "./src/assistant/graph.py:graph"
+      "base_research": "assistant.base_research_graph:graph",
+      "tech_newsletter": "assistant.newsletter.graph:graph",
+      "deep_research": "assistant.deep_research.graph:graph"
     },
     "python_version": "3.11",
     "env": "./.env",

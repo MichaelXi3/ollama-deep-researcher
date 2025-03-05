@@ -48,7 +48,8 @@ source .venv/bin/activate
 ```bash
 # Install uv package manager
 curl -LsSf https://astral.sh/uv/install.sh | sh
-uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev
+# uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev
+uvx --refresh --from "langgraph-cli[inmem]" --with-editable . --python 3.11 langgraph dev --host localhost --port 2024
 ```
 
 ### Windows
@@ -195,3 +196,48 @@ URL: https://smith.langchain.com/studio/?baseUrl=http://0.0.0.0:2024
 ...but the browser will not launch from the container.
 
 Instead, visit this link with the correct baseUrl IP address: [`https://smith.langchain.com/studio/thread?baseUrl=http://127.0.0.1:2024`](https://smith.langchain.com/studio/thread?baseUrl=http://127.0.0.1:2024)
+
+## Project Structure
+
+The codebase has been refactored for better organization and to eliminate code duplication:
+
+```
+src/assistant/
+├── common/                    # Shared utilities and components
+│   ├── state.py              # Unified state classes
+│   ├── search_tools.py       # Search tool functions
+│   ├── source_utils.py       # Source formatting utilities
+│   ├── prompts.py            # Shared prompt templates
+│   └── llm.py                # LLM configuration
+├── deep_research/            # Deep research graph
+│   ├── interface.py          # Public interface
+│   ├── graph.py              # Graph implementation
+│   └── models.py             # Research models
+├── newsletter/               # Newsletter graph
+│   └── graph.py              # Graph implementation
+├── configuration.py          # Configuration settings
+├── base_research_graph.py    # Base research functionality
+├── research_newsletter_runner.py # Combined runner
+└── utils.py                  # Other utility functions
+```
+
+This structure eliminates duplicate code while maintaining clear separation of concerns:
+
+- The `common` directory contains shared components used by multiple modules
+- State definitions are consolidated into a common module with inheritance
+- Search functionality and prompt templates are unified and reusable
+- Each module (deep_research, newsletter) focuses solely on its own unique implementation
+
+# Basic usage without deep research
+runner = ResearchNewsletterRunner()
+result = await runner.run()
+
+# Enable deep research
+result = await runner.run(use_deep_research=True)
+
+# Customize categories and date
+result = await runner.run(
+    categories=["AI & ML", "Blockchain", "Cloud Computing"],
+    use_deep_research=True,
+    date="2024-02-23"
+)

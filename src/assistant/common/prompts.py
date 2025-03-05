@@ -1,4 +1,11 @@
-query_writer_instructions="""Your goal is to generate a targeted web search query.
+"""Common prompt templates used across different modules.
+
+This module contains prompt templates that are used by multiple components of the application.
+These are shared to maintain consistency and avoid duplication.
+"""
+
+# Research prompts
+query_writer_instructions = """Your goal is to generate a targeted web search query.
 The query will gather information related to a specific topic.
 
 <TOPIC>
@@ -7,7 +14,7 @@ The query will gather information related to a specific topic.
 
 <FORMAT>
 Format your response as a JSON object with ALL three of these exact keys:
-   - "query": The actual search query string
+   - "query": The actual search query strxing
    - "aspect": The specific aspect of the topic being researched
    - "rationale": Brief explanation of why this query is relevant
 </FORMAT>
@@ -23,7 +30,7 @@ Example output:
 
 Provide your response in JSON format:"""
 
-summarizer_instructions="""
+summarizer_instructions = """
 <GOAL>
 Generate a high-quality summary of the web search results and keep it concise / related to the user topic.
 </GOAL>
@@ -42,11 +49,11 @@ When EXTENDING an existing summary:
     c. If it's not relevant to the user topic, skip it.                                                            
 4. Ensure all additions are relevant to the user's topic.                                                         
 5. Verify that your final output differs from the input summary.                                                                                                                                                            
-< /REQUIREMENTS >
+</REQUIREMENTS>
 
-< FORMATTING >
+<FORMATTING>
 - Start directly with the updated summary, without preamble or titles. Do not use XML tags in the output.  
-< /FORMATTING >"""
+</FORMATTING>"""
 
 reflection_instructions = """You are an expert research assistant analyzing a summary about {research_topic}.
 
@@ -75,3 +82,81 @@ Example output:
 </EXAMPLE>
 
 Provide your analysis in JSON format:"""
+
+# Newsletter prompts
+newsletter_query_instructions = """You are a tech news curator. Your task is to generate a search query to find the top three latest news articles for a specific tech category.
+
+<CATEGORY>
+{category}
+</CATEGORY>
+
+<DATE>
+{date}
+</DATE>
+
+The query should:
+1. Focus on the specified category
+2. Target news from the specified date
+3. Prioritize major developments and announcements
+4. Be specific enough to find relevant articles but not too narrow
+
+Output your query in JSON format like this:
+{{
+    "query": "your search query here"
+}}
+"""
+
+newsletter_summarizer_instructions = """You are a tech newsletter writer. Your task is to summarize news articles for a specific category.
+
+<CATEGORY>
+{category}
+</CATEGORY>
+
+<SEARCH_RESULTS>
+{web_research_results}
+</SEARCH_RESULTS>
+
+For each article in the search results:
+1. Create a clear, concise title that captures the main point
+2. Estimate reading time (in minutes)
+3. Write a concise 1-2 paragraph summary
+4. Focus on facts and key developments
+5. Maintain a professional, neutral tone
+
+Format each article summary as:
+{{
+    "title": "Article Title Here (X minute read)",
+    "summary": "1-2 paragraph summary here",
+    "url": "Article URL here"
+}}
+
+Return a list of article summaries in JSON format:
+{{
+    "summaries": [
+        {{article1}},
+        {{article2}},
+        ...
+    ]
+}}
+"""
+
+newsletter_generator_instructions = """You are a tech newsletter editor. Your task is to create a well-formatted newsletter combining all category summaries.
+
+Use this format:
+
+🏗️ Builder's News {date}
+
+{categories_content}
+
+For each category:
+1. Show the category name with its emoji
+2. Add a blank line
+3. List all articles in that category
+
+For each article:
+1. Show the title with reading time
+2. Add a blank line
+3. Show the summary
+4. Add a blank line between articles
+
+Keep summaries concise and informative. Focus on the most important developments in each category.""" 

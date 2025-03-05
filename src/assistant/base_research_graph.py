@@ -1,3 +1,7 @@
+"""Base research graph implementation for core research and summarization capabilities.
+This module provides the foundational graph structure for performing web research,
+summarization, and iterative knowledge gathering."""
+
 import json
 
 from typing_extensions import Literal
@@ -7,10 +11,11 @@ from langchain_core.runnables import RunnableConfig
 from langchain_ollama import ChatOllama
 from langgraph.graph import START, END, StateGraph
 
-from assistant.configuration import Configuration, SearchAPI
-from assistant.utils import deduplicate_and_format_sources, tavily_search, format_sources, perplexity_search, duckduckgo_search
-from assistant.state import SummaryState, SummaryStateInput, SummaryStateOutput
-from assistant.prompts import query_writer_instructions, summarizer_instructions, reflection_instructions
+from .configuration import Configuration, SearchAPI
+from .common.search_tools import duckduckgo_search, tavily_search, perplexity_search
+from .common.source_utils import deduplicate_and_format_sources, format_sources
+from .common.state import SummaryState, SummaryStateInput, SummaryStateOutput
+from .common.prompts import query_writer_instructions, summarizer_instructions, reflection_instructions
 
 # Nodes
 def generate_query(state: SummaryState, config: RunnableConfig):
@@ -141,8 +146,15 @@ def route_research(state: SummaryState, config: RunnableConfig) -> Literal["fina
     else:
         return "finalize_summary"
 
-# Add nodes and edges
-builder = StateGraph(SummaryState, input=SummaryStateInput, output=SummaryStateOutput, config_schema=Configuration)
+# Create the graph with schemas
+builder = StateGraph(
+    SummaryState,
+    input=SummaryStateInput,
+    output=SummaryStateOutput,
+    config_schema=Configuration
+)
+
+# Add nodes
 builder.add_node("generate_query", generate_query)
 builder.add_node("web_research", web_research)
 builder.add_node("summarize_sources", summarize_sources)
@@ -157,4 +169,5 @@ builder.add_edge("summarize_sources", "reflect_on_summary")
 builder.add_conditional_edges("reflect_on_summary", route_research)
 builder.add_edge("finalize_summary", END)
 
+# Compile the graph
 graph = builder.compile()

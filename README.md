@@ -116,9 +116,9 @@ newsletter = generator.create(
 ### Markdown Format (Default)
 
 ```markdown
-**🏗️ Builder's News 2025-03-04**
+🏗️ Builder's News 2025-03-04
 
-**📱 Big Tech & Startups**
+📱 Big Tech & Startups
 
 Anthropic AI Startup Reaches $61.5B Valuation (2 minute read)
 
@@ -138,7 +138,7 @@ Seattle-based gaming startup Rec Room has laid off 16% of its workforce, as conf
 
 Read more: https://deepnewz.com/startups/rec-room-lays-off-16-staff-on-march-4-2025-amid-industry-challenges-e7734e69
 
-**🤖 Robotics & Autonomous Systems**
+🤖 Robotics & Autonomous Systems
 
 oToBrite Showcases Vision-AI Positioning Solutions for Autonomous Robots (1 minute read)
 
@@ -158,7 +158,7 @@ oToBrite continues to highlight its Vision-AI positioning solutions tailored for
 
 Read more: https://www.kilgorenewsherald.com/otobrite-to-showcase-vision-ai-positioning-solutions-for-autonomous-robots-and-unmanned-vehicles-at-embedded/article_b989edc6-6878-5ebd-b899-58c143ed6c7e.html
 
-**🔗 Blockchain & Decentralized Systems**
+🔗 Blockchain & Decentralized Systems
 
 Blockchain Outlook 2025 | StartUs Insights (2 minute read)
 

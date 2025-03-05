@@ -13,10 +13,9 @@ async def test_newsletter(use_two_phase=True, max_normal_categories=2):
     # Define categories (optional - will use defaults if not specified)
     categories = [
         "Big Tech & Startups",
-        "Science & Futuristic Technology",
-        "Programming, Design & Data Science",
-        "Cybersecurity & Privacy",
-        "AI & Public Policy",
+        "Robotics & Autonomous Systems",
+        "Blockchain & Decentralized Systems",
+        # "Artificial Intelligence & Public Policy",
     ]
     
     print("Generating newsletter...")
@@ -25,7 +24,7 @@ async def test_newsletter(use_two_phase=True, max_normal_categories=2):
     # Run the newsletter generation
     result = await runner.run(
         categories=categories,
-        date="2025-02-26"  # You can change this date
+        date="2025-03-04"  # You can change this date
     )
     
     # Print the results

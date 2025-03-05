@@ -55,7 +55,7 @@ class NewsletterRunner:
             date=date or datetime.now().strftime("%Y-%m-%d"),
             categories=categories,
             category_summaries={},
-            tldr_summary="",
+            newsletter_summary="",
             sources_gathered=[],
             current_category=categories[0]
         )
@@ -64,17 +64,17 @@ class NewsletterRunner:
         result = await self.newsletter_graph.ainvoke(newsletter_input)
         
         # Handle different result types from LangGraph
-        if hasattr(result, 'tldr_summary'):
+        if hasattr(result, 'newsletter_summary'):
             # Direct access if it's a simple object
             return {
-                "tldr_summary": result.tldr_summary,
+                "tldr_summary": result.newsletter_summary,
                 "category_summaries": result.category_summaries,
                 "sources": result.sources_gathered
             }
         elif isinstance(result, dict):
             # If result is a dict, extract values
             return {
-                "tldr_summary": result.get("tldr_summary", ""),
+                "tldr_summary": result.get("newsletter_summary", ""),
                 "category_summaries": result.get("category_summaries", {}),
                 "sources": result.get("sources_gathered", [])
             }
@@ -84,7 +84,7 @@ class NewsletterRunner:
             # Try to convert to dict and extract values
             result_dict = dict(result) if hasattr(result, "__iter__") else {}
             return {
-                "tldr_summary": result_dict.get("tldr_summary", ""),
+                "tldr_summary": result_dict.get("newsletter_summary", ""),
                 "category_summaries": result_dict.get("category_summaries", {}),
                 "sources": result_dict.get("sources_gathered", [])
             }
